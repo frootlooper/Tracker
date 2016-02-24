@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
-
-import com.Tracker.data.Task;
-import com.Tracker.data.TaskStatus;
+import com.Tracker.data.Database;
+import com.Tracker.model.Task;
+import com.Tracker.model.TaskStatus;
 
 public class View extends ActionSupport implements SessionAware {
 
@@ -24,9 +23,11 @@ public class View extends ActionSupport implements SessionAware {
 	private boolean postBack = false;
 	private String dataAction;
 	private String taskID;
+	private Database db;
 	
 	@Action("view-input")
 	public String input() throws Exception {
+		System.out.println("In input method");
 		if (session.containsKey("myTasks")) {
 			this.myTasks = (List<Task>) session.get("myTasks");
 		} else {
@@ -38,11 +39,11 @@ public class View extends ActionSupport implements SessionAware {
 	@Override
 	@Action("view")
 	public String execute() throws Exception {
-		if (session.containsKey("myTasks")) {
-			this.myTasks = (List<Task>) session.get("myTasks");
-		} else {
-			this.myTasks = new ArrayList<Task>();
+		if (db == null) {
+			db = new Database();
 		}
+		db.loadTasks();
+		this.myTasks = db.getTasks();
 		if (postBack) {
 			if (dataAction.equals("add")) {
 				return addTask();
@@ -66,10 +67,10 @@ public class View extends ActionSupport implements SessionAware {
 		} catch (Exception e) {
 			d = new Date();
 		}
-		String id = UUID.randomUUID().toString();
-		Task t = new Task(id, enteredTitle, enteredDescription, d);
-		getMyTasks().add(t);
-		session.put("myTasks", getMyTasks());
+		Task t = new Task(enteredTitle, enteredDescription, d);
+		db.addTask(t);
+		db.loadTasks();
+		this.myTasks = db.getTasks();
 		this.enteredTitle = "";
 		this.enteredDescription = "";
 		this.enteredDueDate = "";
@@ -77,12 +78,18 @@ public class View extends ActionSupport implements SessionAware {
 	}
 
 	public String deleteTask() {
-		Task t = new Task(taskID, "", "", new Date());
+		/*Task t = new Task("", "", new Date());
+		t.setID(taskID);
 		int i = myTasks.indexOf(t);
 		if (i >=0) {
 			this.myTasks.remove(i);
 		}
-		session.put("myTasks", this.myTasks);
+		session.put("myTasks", this.myTasks);*/
+		
+		db.removeTask(taskID);
+		db.loadTasks();
+		this.myTasks = db.getTasks();
+		
 		return "ajax";
 	}
 	

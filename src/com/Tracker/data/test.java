@@ -1,24 +1,19 @@
 package com.Tracker.data;
 
 import java.util.Date;
-import java.util.UUID;
 import org.hibernate.Session;
+import com.Tracker.model.Task;
+import com.Tracker.model.TaskStatus;
 
 public class test {
 
 	public static void main(String[] args) {
-		Session session = HibernateUtilities.getSessionFactory().openSession();
-		session.beginTransaction();
-		Task t = new Task(UUID.randomUUID().toString(), "Dishes", "All of them", new Date());
-		t.setStatus(TaskStatus.INPROGRESS);
-		session.save(t);
-		session.getTransaction().commit();
+		Database db = new Database();
+		db.loadTasks();
 		
-		session.beginTransaction();
-		
-		session.getTransaction().commit();
-		
-		session.close();
-		HibernateUtilities.getSessionFactory().close();
+		Task t = new Task("title", "description", new Date());
+		db.addTask(t);
+		System.out.println(db.getTasks());
+		db.close();
 	}
 }
