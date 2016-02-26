@@ -1,7 +1,6 @@
 package com.Tracker.model;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.*;
 
@@ -17,12 +16,9 @@ public class Task {
 	private Date dueDate;
 	private TaskStatus status;
 	
-	public Task() {
-		super();
-	}
+	public Task() {	}
 	
 	public Task(String title, String desc, Date date) {
-		//this.ID = UUID.randomUUID().toString();
 		this.title = title;
 		this.description = desc;
 		setStatus(TaskStatus.NEW);

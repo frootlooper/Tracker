@@ -1,23 +1,21 @@
 package com.Tracker.actions;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.Tracker.data.Database;
 import com.Tracker.model.Task;
-import com.Tracker.model.TaskStatus;
 
-public class View extends ActionSupport implements SessionAware {
+public class View extends ActionSupport {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	private Map<String, Object> session;
 	private List<Task> myTasks;
 	private String enteredTitle, enteredDescription, enteredDueDate;
 	private boolean postBack = false;
@@ -27,12 +25,11 @@ public class View extends ActionSupport implements SessionAware {
 	
 	@Action("view-input")
 	public String input() throws Exception {
-		System.out.println("In input method");
-		if (session.containsKey("myTasks")) {
-			this.myTasks = (List<Task>) session.get("myTasks");
-		} else {
-			this.myTasks = new ArrayList<Task>();
+		if (db == null) {
+			db = new Database();
 		}
+		db.loadTasks();
+		this.myTasks=db.getTasks();
 		return SUCCESS;
 	}
 	
@@ -42,8 +39,6 @@ public class View extends ActionSupport implements SessionAware {
 		if (db == null) {
 			db = new Database();
 		}
-		db.loadTasks();
-		this.myTasks = db.getTasks();
 		if (postBack) {
 			if (dataAction.equals("add")) {
 				return addTask();
@@ -51,13 +46,11 @@ public class View extends ActionSupport implements SessionAware {
 			if (dataAction.equals("delete")) {
 				return deleteTask();
 			}
+		} else {
+			db.loadTasks();
+			this.myTasks = db.getTasks();
 		}
 		return SUCCESS;
-	}
-
-	@Override
-	public void setSession(Map<String, Object> session) {
-		this.session = session;
 	}
 	
 	public String addTask() {
@@ -78,14 +71,9 @@ public class View extends ActionSupport implements SessionAware {
 	}
 
 	public String deleteTask() {
-		/*Task t = new Task("", "", new Date());
-		t.setID(taskID);
-		int i = myTasks.indexOf(t);
-		if (i >=0) {
-			this.myTasks.remove(i);
+		if (db == null) {
+			db = new Database();
 		}
-		session.put("myTasks", this.myTasks);*/
-		
 		db.removeTask(taskID);
 		db.loadTasks();
 		this.myTasks = db.getTasks();
@@ -105,7 +93,6 @@ public class View extends ActionSupport implements SessionAware {
 		this.enteredDescription = enteredDescription;
 	}
 
-//	@RequiredStringValidator(type=ValidatorType.FIELD, message="You must entered a task title.")
 	public String getEnteredTitle() {
 		return enteredTitle;
 	}

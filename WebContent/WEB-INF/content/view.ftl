@@ -9,24 +9,24 @@
 <@sj.head/>
 
 <script type="text/javascript">
-$.subscribe('ajaxcompletedialog',function(event,data){
+$.subscribe('closedialog',function(event,data){
     $("#addNewTaskForm").dialog('close');
 });
 
 $.subscribe('opendialog',function(event,data){
+	$(".clear").each( function() {
+			$(this).val("");
+	});
     $("#addNewTaskForm").dialog('open');
 });
 </script>
 
 <style>
-#addNewForm label {
+#createTaskForm label {
 	color: black;
 }
 .ui-datepicker-trigger {
 	display: none;
-}
-#addTaskForm label {
-	color: black;
 }
 </style>
 
@@ -34,8 +34,19 @@ $.subscribe('opendialog',function(event,data){
 
 </head>
 <body>
-	<@sj.a onClickTopics="opendialog" class="btn">Add New Task</@sj.a>
+ 	<@sj.a button="true" onClickTopics="opendialog" class="btn btn-default">Add New Task</@sj.a>
 	
+	<@sj.dialog id="addNewTaskForm" autoOpen="false" modal="true" title="Add Task" draggable="false">
+    	<@s.form id="createTaskForm" action="view" cssClass="form-group">
+			<@s.hidden name="postBack" value="true" />
+			<@s.hidden name="dataAction" value="add" />
+			<@s.textfield name="enteredTitle" label="Task Title" labelposition="top" cssClass="form-control form-group clear" />
+			<@s.textarea name="enteredDescription" label="Task Description" labelposition="top" cssClass="form-control form-group clear" />
+			<@sj.datepicker name="enteredDueDate" label="Due Date" labelposition="top" changeYear="true" cssClass="clear datepicker form-control form-group" />
+			<@sj.submit onSuccessTopics="closedialog" value="Add" id="addTaskFormSubmit" formIds="createTaskForm" targets="result" button="true" cssClass="btn btn-default" />
+		</@s.form>
+	</@sj.dialog>
+		
 	<div id=result>
 	<#include "view-ajax.ftl">
 	</div>

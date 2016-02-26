@@ -1,7 +1,6 @@
 package com.Tracker.data;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -32,15 +31,16 @@ public class Database {
 	}
 	
 	public void addTask(Task t) {
+		session = HibernateUtilities.getSessionFactory().openSession();
 		session.beginTransaction();
 		session.save(t);
 		session.getTransaction().commit();
 	}
 	
 	public void removeTask(String uuid) {
-		System.out.println("In remove Task method");
+		session = HibernateUtilities.getSessionFactory().openSession();
 		session.beginTransaction();
-		Task t = new Task("","",new Date());
+		Task t = new Task();
 		t.setID(uuid);
 		session.delete(t);
 		session.getTransaction().commit();

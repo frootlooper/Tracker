@@ -1,15 +1,4 @@
-	
-	<@sj.dialog id="addNewTaskForm" autoOpen="false" modal="true" title="Add Task" draggable="false">
-    	<@s.form id="createTaskForm" action="view" validate="true" cssClass="form-group">
-			<@s.hidden name="postBack" value="true" />
-			<@s.hidden name="dataAction" value="add" />
-			<@s.textfield name="enteredTitle" label="Task Title" labelposition="top" cssClass="form-control form-group" />
-			<@s.textarea name="enteredDescription" label="Task Description" labelposition="top" cssClass="form-control form-group" />
-			<@sj.datepicker name="enteredDueDate" label="Due Date" labelposition="top" changeYear="true" cssClass="datepicker form-control form-group" />
-			<@sj.submit onSuccessTopics="ajaxcompleteddialog" value="Add" id="addTaskFormSubmit" formIds="createTaskForm" targets="result" button="true" cssClass="btn btn-default" />
-		</@s.form>
-	</@sj.dialog>
-	
+
 	<table class="table table-bordered">
 		<caption>Task List</caption>
 		<thead>
