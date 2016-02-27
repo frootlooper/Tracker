@@ -9,11 +9,9 @@ import com.Tracker.model.Task;
 
 public class Database {
 	private List<Task> tasks;
-	private Session session;
 	
 	public Database() {
 		tasks = new ArrayList<Task>();
-		session = HibernateUtilities.getSessionFactory().openSession();
 	}
 
 	public List<Task> getTasks() {
@@ -25,29 +23,37 @@ public class Database {
 	}
 	
 	public void loadTasks() {
-		session.beginTransaction();
-		tasks = (List<Task>) session.createCriteria(Task.class).list();
-		session.getTransaction().commit();
+		Session session = HibernateUtilities.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			tasks = (List<Task>) session.createCriteria(Task.class).list();
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
 	}
 	
 	public void addTask(Task t) {
-		session = HibernateUtilities.getSessionFactory().openSession();
-		session.beginTransaction();
-		session.save(t);
-		session.getTransaction().commit();
+		Session session = HibernateUtilities.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			session.save(t);
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
 	}
 	
 	public void removeTask(String uuid) {
-		session = HibernateUtilities.getSessionFactory().openSession();
-		session.beginTransaction();
-		Task t = new Task();
-		t.setID(uuid);
-		session.delete(t);
-		session.getTransaction().commit();
-	}
-	
-	public void close() {
-		session.close();
-		HibernateUtilities.getSessionFactory().close();
+		Session session = HibernateUtilities.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Task t = new Task();
+			t.setID(uuid);
+			session.delete(t);
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
 	}
 }

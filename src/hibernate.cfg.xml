@@ -4,10 +4,11 @@
 <hibernate-configuration>
  <session-factory>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-  <property name="hibernate.connection.password">Password1</property>
-  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/trackerdb</property>
-  <property name="hibernate.connection.username">dbadmin</property>
-  <property name="hibernate.default_schema">trackerdb</property>
+  <property name="hibernate.connection.password">a1f4d087</property>
+  <property name="hibernate.connection.url">jdbc:mysql://us-cdbr-azure-east-a.cloudapp.net:3306/acsm_491f9397f0d1bdc</property>
+  <property name="hibernate.connection.username">bf2be4bf2edc51</property>
+  <property name="connection.pool_size">1</property>
+  <property name="hibernate.default_schema">acsm_491f9397f0d1bdc</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.hbm2ddl.auto">update</property>

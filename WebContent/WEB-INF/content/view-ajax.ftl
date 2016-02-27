@@ -3,7 +3,7 @@
 		<caption>Task List</caption>
 		<thead>
 			<tr>
-				<th>ID</th>
+<!-- 				<th>ID</th> -->
 				<th>Title</th>
 				<th>Description</th>
 				<th>Due Date</th>
@@ -14,13 +14,13 @@
 		<tbody>
 		<@s.iterator value="myTasks" status="status">
 			<tr>
-				<th scope="row"><@s.property value="ID"/></th>
+				<!-- <th scope="row"><@s.property value="ID"/></th> -->
 				<th><@s.property value="title"/></th>
 				<th><@s.property value="description"/></th>
 				<th><@s.property value="%{dueDate}"/></th>
 				<th><@s.property value="status"/></th>
 				<th>
-					<@s.form id="deleteTaskForm%{#status.count}" action="view">
+					<@s.form id="deleteTaskForm%{#status.count}" action="view" class="form-inline">
 						<@s.hidden name="dataAction" value="delete" />
 						<@s.hidden name="taskID" value="%{ID}" />
 						<@s.hidden name="postBack" value="true" />

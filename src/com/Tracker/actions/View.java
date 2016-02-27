@@ -21,13 +21,10 @@ public class View extends ActionSupport {
 	private boolean postBack = false;
 	private String dataAction;
 	private String taskID;
-	private Database db;
+	private static Database db = new Database();
 	
 	@Action("view-input")
 	public String input() throws Exception {
-		if (db == null) {
-			db = new Database();
-		}
 		db.loadTasks();
 		this.myTasks=db.getTasks();
 		return SUCCESS;
@@ -36,9 +33,6 @@ public class View extends ActionSupport {
 	@Override
 	@Action("view")
 	public String execute() throws Exception {
-		if (db == null) {
-			db = new Database();
-		}
 		if (postBack) {
 			if (dataAction.equals("add")) {
 				return addTask();
@@ -71,9 +65,6 @@ public class View extends ActionSupport {
 	}
 
 	public String deleteTask() {
-		if (db == null) {
-			db = new Database();
-		}
 		db.removeTask(taskID);
 		db.loadTasks();
 		this.myTasks = db.getTasks();
