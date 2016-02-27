@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 
 import com.Tracker.model.Task;
 
@@ -26,7 +27,10 @@ public class Database {
 		Session session = HibernateUtilities.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			tasks = (List<Task>) session.createCriteria(Task.class).list();
+			tasks = (List<Task>) session.createCriteria(Task.class)
+					.addOrder(Order.asc("status"))
+					.addOrder(Order.asc("dueDate"))
+					.list();
 			session.getTransaction().commit();
 		} finally {
 			session.close();
@@ -51,6 +55,17 @@ public class Database {
 			Task t = new Task();
 			t.setID(uuid);
 			session.delete(t);
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
+	}
+	
+	public void editTask(Task t) {
+		Session session = HibernateUtilities.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			session.update(t);
 			session.getTransaction().commit();
 		} finally {
 			session.close();
