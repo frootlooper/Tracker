@@ -2,15 +2,15 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
                                          "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
- <session-factory name="">
+ <session-factory>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-  <property name="hibernate.connection.password">a1f4d087</property>
-  <property name="hibernate.connection.url">jdbc:mysql://us-cdbr-azure-east-a.cloudapp.net:3306/acsm_491f9397f0d1bdc</property>
-  <property name="hibernate.connection.username">bf2be4bf2edc51</property>
+  <property name="hibernate.connection.password">DB PASSWORD</property>
+  <property name="hibernate.connection.url">jdbc:mysql://HOSTNAME:3306/DBNAME</property>
+  <property name="hibernate.connection.username">DB USERNAME</property>
   <property name="connection.pool_size">4</property>
-  <property name="hibernate.default_schema">acsm_491f9397f0d1bdc</property>
+  <property name="hibernate.default_schema">DBNAME</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <property name="hibernate.show_sql">true</property>
-  <property name="hibernate.hbm2ddl.auto">validate</property>
+  <property name="hibernate.hbm2ddl.auto">update</property>
  </session-factory>
 </hibernate-configuration>

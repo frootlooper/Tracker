@@ -11,32 +11,30 @@ import com.Tracker.data.Database;
 import com.Tracker.model.Task;
 import com.Tracker.model.TaskStatus;
 
+/*
+ * This is the view action for the web app.
+ * Returns success on initial load and ajax for every other operation.
+ * Ajax will refresh the result div with the view-ajax.ftl contents.
+ */
 public class View extends ActionSupport {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private List<Task> myTasks;
-	private String enteredTitle, enteredDescription, enteredDueDate;
+	private String enteredTitle, enteredDescription, enteredDueDate, dataAction, taskID;
 	private boolean postBack = false;
-	private String dataAction;
-	private String taskID;
 	private TaskStatus enteredStatus;
-	private TaskStatus[] statuses = TaskStatus.values();
 	private static Database db = new Database();
 	
-	@Action("view-input")
-	public String input() throws Exception {
-		db.loadTasks();
-		this.myTasks=db.getTasks();
-		return SUCCESS;
-	}
-	
+	/*
+	 * This method is the action called by the forms on the webpage.
+	 * It handles initial load and redirects to the desired method.
+	 * (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#execute()
+	 */
 	@Override
 	@Action("view")
 	public String execute() throws Exception {
-		if (postBack) {
+		if (postBack) { //A form has been submitted, so check which one.
 			if (dataAction.equals("add")) {
 				return addTask();
 			}
@@ -47,12 +45,17 @@ public class View extends ActionSupport {
 				return editTask();
 			}
 		} else {
-			db.loadTasks();
+			// A form has not been submitted so it must be the initial page load.
 			this.myTasks = db.getTasks();
 		}
 		return SUCCESS;
 	}
 	
+	/*
+	 * Take entered fields and create a new Task object, then add it to the database.
+	 * Reload the current tasks.
+	 * Return "ajax" so that page is not refreshed.
+	 */
 	public String addTask() {
 		Date d;
 		try {
@@ -62,7 +65,6 @@ public class View extends ActionSupport {
 		}
 		Task t = new Task(enteredTitle, enteredDescription, d);
 		db.addTask(t);
-		db.loadTasks();
 		this.myTasks = db.getTasks();
 		this.enteredTitle = "";
 		this.enteredDescription = "";
@@ -70,14 +72,24 @@ public class View extends ActionSupport {
 		return "ajax";
 	}
 
+	/*
+	 * Give the task ID to the database for deletion.
+	 * Reload the current tasks.
+	 * Return "ajax" so that the page isn't refreshed.
+	 */
 	public String deleteTask() {
 		db.removeTask(taskID);
-		db.loadTasks();
 		this.myTasks = db.getTasks();
 		
 		return "ajax";
 	}
 	
+	/*
+	 * Create a new Task object based on field values.
+	 * Send this task to the database for update.
+	 * Reload the current tasks.
+	 * Return "ajax" so that the page isn't refreshed.
+	 */
 	public String editTask() {
 		Date d;
 		try {
@@ -90,11 +102,14 @@ public class View extends ActionSupport {
 		t.setStatus(getEnteredStatus());
 		System.out.println(getEnteredStatus());
 		db.editTask(t);
-		db.loadTasks();
 		this.myTasks = db.getTasks();
 		return "ajax";
 	}
 	
+	/*
+	 * Returns the list of options for the edit dialog.
+	 * Need to rewrite so that it pulls from the ENUM class isntead of hardcoded.
+	 */
 	public String[] getStatuses() {
 		return new String[]{"NEW", "INPROGRESS", "DONE"};
 	}

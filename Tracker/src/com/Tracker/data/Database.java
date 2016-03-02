@@ -4,27 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 
 import com.Tracker.model.Task;
 
+/*
+ * Class manages all the operations needed to be performed on the data including create, delete and edit.
+ */
 public class Database {
-	private List<Task> tasks;
+	private SessionFactory factory;
 	
 	public Database() {
-		tasks = new ArrayList<Task>();
-	}
-
-	public List<Task> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
+		factory = HibernateUtilities.getSessionFactory();
 	}
 	
-	public void loadTasks() {
-		Session session = HibernateUtilities.getSessionFactory().openSession();
+	/*
+	 * Loads all of the tasks in the database into a List<Task>
+	 * and returns it.
+	 */
+	public List<Task> getTasks() {
+		List<Task> tasks = null;
+		Session session = factory.openSession();
 		try {
 			session.beginTransaction();
 			tasks = (List<Task>) session.createCriteria(Task.class)
@@ -35,10 +36,14 @@ public class Database {
 		} finally {
 			session.close();
 		}
+		return tasks;
 	}
 	
+	/*
+	 * Adds a new task to the database.
+	 */
 	public void addTask(Task t) {
-		Session session = HibernateUtilities.getSessionFactory().openSession();
+		Session session = factory.openSession();
 		try {
 			session.beginTransaction();
 			session.save(t);
@@ -48,8 +53,11 @@ public class Database {
 		}
 	}
 	
+	/*
+	 * Removes a task based on its uuid from the database.
+	 */
 	public void removeTask(String uuid) {
-		Session session = HibernateUtilities.getSessionFactory().openSession();
+		Session session = factory.openSession();
 		try {
 			session.beginTransaction();
 			Task t = new Task();
@@ -61,8 +69,11 @@ public class Database {
 		}
 	}
 	
+	/*
+	 * Edits a specific task with the properties of the task passed in.
+	 */
 	public void editTask(Task t) {
-		Session session = HibernateUtilities.getSessionFactory().openSession();
+		Session session = factory.openSession();
 		try {
 			session.beginTransaction();
 			session.update(t);
